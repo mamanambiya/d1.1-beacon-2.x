@@ -23,13 +23,30 @@ services:
     networks:
       - priv
 
+
+  cineca-db:
+    environment:
+      - PGDATA=/beacon-db
+      - POSTGRES_USER=beacon
+      - POSTGRES_PASSWORD=secretpassword
+      - POSTGRES_DB=beacon
+    hostname: cineca-beacon-db
+    container_name: cineca-beacon-db
+    image: postgres:9.6-alpine
+    volumes:
+      - ./db-cineca:/docker-entrypoint-initdb.d
+    ports:
+      - "5048:5432"  
+    networks:
+      - priv
+
   beacon:
     build: ../src
     image: egarchive/beacon-api:2.0
     hostname: beacon
     container_name: beacon
     environment:
-      - DATABASE_URL=beacon-db
+      - DATABASE_URL=cineca-beacon-db  # change this to change from the beacon-db to the cineca-beacon-db
       - DATABASE_PORT=5432
       - DATABASE_USER=beacon
       - DATABASE_PASSWORD=secretpassword
@@ -44,7 +61,7 @@ services:
     networks:
       - priv
       - pub
-    entrypoint: ['/bin/sleep','100000000']  # we don't run the beacon just after starting, we'll do it manually 
+    # entrypoint: ['/bin/sleep','100000000']  # we don't run the beacon just after starting, we'll do it manually 
 
   ui:
     build: ../ui

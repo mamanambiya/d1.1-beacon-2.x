@@ -25,36 +25,32 @@ docker_process_sql -c "GRANT EXECUTE ON FUNCTION public.query_data_response(text
 # Datasets
 docker_process_sql < data/init.sql
 
-# Variants
-docker_process_sql -c \
-    "copy beacon_data_table (dataset_id,chromosome,start,variant_id,reference,alternate,\"end\",\"type\",sv_length,variant_cnt,call_cnt,sample_cnt,frequency,matching_sample_cnt) from stdin using delimiters ';' csv header" < data/chr21_subset.variants.csv
 
-# Change datasetId 1 into datasetId 2 and 3 (datasetId is at position 1)
-awk -F ';' -v OFS=';' '{if ($1 == "1") $1="2"; print}' data/chr21_subset.variants.csv | \
-docker_process_sql -c \
-    "copy beacon_data_table (dataset_id,chromosome,start,variant_id,reference,alternate,\"end\",\"type\",sv_length,variant_cnt,call_cnt,sample_cnt,frequency,matching_sample_cnt) from stdin using delimiters ';' csv header"
-awk -F ';' -v OFS=';' '{if ($1 == "1") $1="3"; print}' data/chr21_subset.variants.csv | \
-docker_process_sql -c \
-    "copy beacon_data_table (dataset_id,chromosome,start,variant_id,reference,alternate,\"end\",\"type\",sv_length,variant_cnt,call_cnt,sample_cnt,frequency,matching_sample_cnt) from stdin using delimiters ';' csv header"
+# ----------------------------------------
+#            VIRAL BEACON DATA
+# ----------------------------------------
+echo Inserting viral data
+# 1. Remember to modify the init.sql
 
+# 2. Load the variants
+docker_process_sql -c \
+    "copy beacon_data_table (dataset_id,chromosome,start,variant_id,reference,alternate,\"end\",\"type\",sv_length,variant_cnt,call_cnt,sample_cnt,frequency,matching_sample_cnt) from stdin using delimiters ';' csv" < data/Viral61.vcf.gz.variants_v2.data
+echo "> Variants done"
 
+# 3. Load the samples
 docker_process_sql -c \
-"copy beacon_data_table (dataset_id,chromosome,start,variant_id,reference,alternate,\"end\",\"type\",sv_length,variant_cnt,call_cnt,sample_cnt,frequency,matching_sample_cnt) from stdin using delimiters ';' csv header" < data/chrY_subset.variants.csv
+"copy tmp_sample_table (sample_stable_id,dataset_id) from stdin using delimiters ';' csv" < data/Viral61.vcf.gz.samples_v2.data
+echo "> Samples done"
 
+# 4. Load the samples matching variants
+docker_process_sql -c \
+"copy tmp_data_sample_table (dataset_id,chromosome,start,variant_id,reference,alternate,\"type\",sample_ids) from stdin using delimiters ';' csv" < data/Viral61.vcf.gz.variants.matching.samples_v2.data
+echo "> Variants-samples done"
 
-# Sample list
-docker_process_sql -c \
-"copy tmp_sample_table (sample_stable_id,dataset_id) from stdin using delimiters ';' csv header" < data/chrY_subset.samples.csv
-docker_process_sql -c \
-"copy tmp_sample_table (sample_stable_id,dataset_id) from stdin using delimiters ';' csv header" < data/chr21_subset.samples.csv
-
-# Change datasetId 1 into datasetId 2 and 3 (datasetId is at position 2)
-awk -F ';' -v OFS=';' '{if ($2 == "1") $2="2"; print}' data/chr21_subset.samples.csv | \
-docker_process_sql -c \
-"copy tmp_sample_table (sample_stable_id,dataset_id) from stdin using delimiters ';' csv header"
-awk -F ';' -v OFS=';' '{if ($2 == "1") $2="3"; print}' data/chr21_subset.samples.csv | \
-docker_process_sql -c \
-"copy tmp_sample_table (sample_stable_id,dataset_id) from stdin using delimiters ';' csv header"
+echo Done inserting viral data
+# ----------------------------------------
+#        END VIRAL BEACON DATA
+# ----------------------------------------
 
 
 docker_process_sql -c "INSERT INTO beacon_sample_table (stable_id)
@@ -70,21 +66,6 @@ docker_process_sql -c "INSERT INTO beacon_dataset_sample_table (dataset_id, samp
          INNER JOIN beacon_dataset_table dat ON dat.id=t.dataset_id
          LEFT JOIN beacon_dataset_sample_table dat_sam ON dat_sam.dataset_id=dat.id AND dat_sam.sample_id=sam.id
          WHERE dat_sam.id IS NULL"
-
-# Samples where each variant is found
-docker_process_sql -c \
-"copy tmp_data_sample_table (dataset_id,chromosome,start,variant_id,reference,alternate,\"type\",sample_ids) from stdin using delimiters ';' csv header" \
-< data/chrY_subset.variants.matching.samples.csv
-docker_process_sql -c \
-"copy tmp_data_sample_table (dataset_id,chromosome,start,variant_id,reference,alternate,\"type\",sample_ids) from stdin using delimiters ';' csv header" \
-< data/chr21_subset.variants.matching.samples.csv
-
-# Change datasetId 1 into datasetId 2 and 3 (datasetId is at position 1)
-awk -F ';' -v OFS=';' '{if ($1 == "1") $1="2"; print}' data/chr21_subset.variants.matching.samples.csv | \
-docker_process_sql -c "copy tmp_data_sample_table (dataset_id,chromosome,start,variant_id,reference,alternate,\"type\",sample_ids) from stdin using delimiters ';' csv header"
-awk -F ';' -v OFS=';' '{if ($1 == "1") $1="3"; print}' data/chr21_subset.variants.matching.samples.csv | \
-docker_process_sql -c "copy tmp_data_sample_table (dataset_id,chromosome,start,variant_id,reference,alternate,\"type\",sample_ids) from stdin using delimiters ';' csv header"
-
 
 # Finally
 docker_process_sql -c "INSERT INTO beacon_data_sample_table (data_id, sample_id)
@@ -106,9 +87,6 @@ docker_process_sql -c "INSERT INTO beacon_data_sample_table (data_id, sample_id)
 
 docker_process_sql -c "TRUNCATE TABLE tmp_sample_table"
 docker_process_sql -c "TRUNCATE TABLE tmp_data_sample_table"
-
-# Do some updates now that everything is loaded
-docker_process_sql < data/updates.sql
 
 popd 
 echo "Initial data loaded"

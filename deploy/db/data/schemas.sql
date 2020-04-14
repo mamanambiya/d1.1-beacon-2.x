@@ -28,7 +28,7 @@ CREATE TABLE public.beacon_dataset_table
 CREATE TABLE public.beacon_data_table (
     id SERIAL NOT NULL PRIMARY KEY,
     dataset_id integer NOT NULL REFERENCES public.beacon_dataset_table (id),
-    chromosome character varying(2) NOT NULL,
+    chromosome text NOT NULL,
     variant_id text,
     reference text NOT NULL,
     alternate text NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE public.beacon_data_sample_table (
 -- Temporary table for loading data into beacon_data_sample_table
 CREATE TABLE public.tmp_data_sample_table (
   dataset_id integer NOT NULL REFERENCES public.beacon_dataset_table (id),
-  chromosome character varying(2) NOT NULL,
+  chromosome text NOT NULL,
   variant_id text,
   reference text NOT NULL,
   alternate text NOT NULL,

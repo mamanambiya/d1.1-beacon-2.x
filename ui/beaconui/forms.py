@@ -18,8 +18,8 @@ LOG = logging.getLogger(__name__)
 ###########################################################################
 
 variantTypes = ('DEL:ME','INS:ME','DUP:TANDEM','DUP','DEL','INS','INV','CNV','SNP','MNP')
-regex = re.compile(r'^(X|Y|MT|[1-9]|1[0-9]|2[0-2])\s*\:\s*(\d+)\s+([ATCGN]+)\s*\>\s*(DEL:ME|INS:ME|DUP:TANDEM|DUP|DEL|INS|INV|CNV|SNP|MNP|[ATCGN]+)$', re.I)
-
+regex_query = re.compile(r'^(NC_045512|X|Y|MT|[1-9]|1[0-9]|2[0-2])\s*\:\s*(\d+)\s+([ATCGN]+)\s*\>\s*(DEL:ME|INS:ME|DUP:TANDEM|DUP|DEL|INS|INV|CNV|SNP|MNP|[ATCGN]+)$', re.I)
+LOG.debug('Regex: %s', regex_query)
 
 # class IncludeDatasetResponsesWidget(forms.RadioSelect):
 #     template_name='forms/include_dataset_responses.html'
@@ -52,6 +52,7 @@ class QueryForm(forms.Form):
                                                 initial='ALL')
     
     print(includeDatasetResponses)
+
     def is_valid(self):
         self.full_clean() # Populate fields (or read self.errors)
 
@@ -66,7 +67,9 @@ class QueryForm(forms.Form):
         self.query_deconstructed_data = None
 
         # Testing the regular Query
-        m = regex.match(query)
+        LOG.debug('Regex: %s', regex_query)
+        m = regex_query.match(str(query))
+        LOG.debug('m: %s', m)
         if m:
             d = { 'referenceName': m.group(1),
                   'start': m.group(2),
@@ -86,7 +89,7 @@ class QueryForm(forms.Form):
                                                   '<div class="small">'
                                                   '<p>where</p>'
                                                   '<ul>'
-                                                  '<li>- Chromosome: 1-22, X, Y, or MT</li>'
+                                                  '<li>- Chromosome: Z, NC_045512, 1-22, X, Y, or MT</li>'
                                                   '<li>- Position: a positive integer</li>'
                                                   '<li>- VariantType: either DEL:ME, INS:ME, DUP:TANDEM, DUP, DEL, INS, INV, CNV, SNP, or MNP</li>'
                                                   '<li>- ReferenceBase or AlternateBase: a combination of one or more A, T, C, G, or N</li>'
@@ -100,7 +103,7 @@ class QueryForm(forms.Form):
 ### For the region queries
 ###########################################################################
 
-region_regex = re.compile(r'^(X|Y|MT|[1-9]|1[0-9]|2[0-2])\s*\:\s*(\d+)\s*-\s*(\d+)$', re.I)
+regex_region = re.compile(r'^(NC_045512|X|Y|MT|[1-9]|1[0-9]|2[0-2])\s*\:\s*(\d+)\s*-\s*(\d+)$', re.I)
 
 class QueryRegionForm(forms.Form):
 
@@ -141,7 +144,7 @@ class QueryRegionForm(forms.Form):
         self.query_deconstructed_data = None
 
         # Testing for Region Query
-        m = region_regex.match(query)
+        m = regex_region.match(query)
         if m: # Correct Region Query
             self.query_deconstructed_data = { 'referenceName': m.group(1),
                                               'start': m.group(2),
@@ -170,7 +173,7 @@ class QueryRegionForm(forms.Form):
 ###########################################################################
 
 variantTypes = ('DEL:ME','INS:ME','DUP:TANDEM','DUP','DEL','INS','INV','CNV','SNP','MNP')
-regex = re.compile(r'^(X|Y|MT|[1-9]|1[0-9]|2[0-2])\s*\:\s*(\d+)\s+([ATCGN]+)\s*\>\s*(DEL:ME|INS:ME|DUP:TANDEM|DUP|DEL|INS|INV|CNV|SNP|MNP|[ATCGN]+)$', re.I)
+regex_sample = re.compile(r'^(X|Y|MT|[1-9]|1[0-9]|2[0-2])\s*\:\s*(\d+)\s+([ATCGN]+)\s*\>\s*(DEL:ME|INS:ME|DUP:TANDEM|DUP|DEL|INS|INV|CNV|SNP|MNP|[ATCGN]+)$', re.I)
         
 class QuerySamplesForm(forms.Form):
 
@@ -215,7 +218,7 @@ class QuerySamplesForm(forms.Form):
             self.query_deconstructed_data = None
 
             # Testing the regular Query
-            m = regex.match(query)
+            m = regex_sample.match(query)
             if m:
                 d = { 'referenceName': m.group(1),
                     'start': m.group(2),

@@ -28,10 +28,24 @@ from .api.services import services_handler
 from .api.samples_ind import sample_ind_request_handler
 from .api.samples_ind_rest import by_id_handler, smt_by_id
 
-
+from .api.genomic_query_viral import viral_snp_handler
 
 LOG = logging.getLogger(__name__)
 routes = web.RouteTableDef()
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+#                                         VIRAL SNP ENDPOINT
+# ----------------------------------------------------------------------------------------------------------------------
+
+@routes.get('/viral_snp')
+@validate("genomic_snp")
+async def beacon_get_viral_snp(request):
+    method, processed_request = await parse_request_object(request)
+    db_pool = request.app['pool']
+    response = await viral_snp_handler(request, processed_request, db_pool)
+    return web.json_response(response)
+
 
 
 # ----------------------------------------------------------------------------------------------------------------------

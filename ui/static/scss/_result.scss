@@ -21,6 +21,13 @@ body#response > main {
 
 		@import 'samples';
 	}
+
+	&.viral_snp {
+		margin: 0 auto;
+		padding: 0;
+
+		@import 'viral_snp';
+	}
 	
 }
 

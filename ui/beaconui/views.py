@@ -216,3 +216,9 @@ class BeaconSamplesView(BaseView):
     #     'assemblyId': 'grch37',
     #     'includeDatasetResponses': 'ALL',
     # }
+
+
+class BeaconViralSNPView(BaseView):
+    formbase = 'QueryFormViral'
+    api_endpoint = conf.CONF.get('beacon-api', 'viral_snp')
+    api_endpoint_error = '[beacon-api] viral_snp endpoint misconfigured'

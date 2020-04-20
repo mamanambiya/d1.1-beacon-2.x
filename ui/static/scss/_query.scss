@@ -7,7 +7,7 @@ form#query {
 	
     box-sizing:border-box;
     width:100%;
-    padding: 1em 1em 2em;
+    padding: 1em;
 	margin: 1em 0 2em;
 	border-top: 1px solid #E5E8EA;
 	
@@ -30,9 +30,21 @@ form#query {
 
 		width: 1040px;
 		margin: 0 auto;
-	
-		
 
+		// specific for the viral endpoints
+		&.viral {
+			display:block;
+
+			#query-search {
+				padding: 1em;
+
+				section > input {
+					width: 900px;
+				}
+			}
+		}
+		// end
+		
 		fieldset {
 			border-radius:0.5em;
 		legend {

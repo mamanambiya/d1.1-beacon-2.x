@@ -1,0 +1,27 @@
+
+#viralSnpResponse {
+    
+    #mainResponseTable {
+        width: 400px;
+        margin: 0 auto;
+        table {
+            width: 100%;
+            border: 1px solid #eff3f6;
+            border-radius: 5px;
+            border-spacing: 0;
+            tr {
+                &:nth-child(even) {
+                    background-color: #eff3f6;
+                  }
+                th {
+                    text-align: left;
+                    padding: 5px;
+                }
+                td {
+                    padding: 5px;
+                }
+            }
+        }
+    }
+
+}

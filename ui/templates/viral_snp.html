@@ -1,0 +1,31 @@
+{% with beacon_response.value.results as results %}
+{% if results %}
+<div id="viralSnpResponse">
+
+    <div id="mainResponseTable">
+        <table>
+            <tbody>
+                <tr>
+                    <th>n</th>
+                    <th>Sample ID</th>
+                    <th>Frequency</th>
+                </tr>
+                {% for res in results %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ res.variantInSample.info.biosample_id }}</td>
+                    <td>{{ res.variantInSample.variant_frequency_dataset }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
+{% else %}
+
+<p>No variants matching the parameters were found.</p>
+
+{% endif %}
+{% endwith %}

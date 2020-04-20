@@ -21,8 +21,9 @@
   </head>
   <body id="{% if beacon_response %}response{% else %}info{% endif %}">
 	
-    {% include 'header.html' %}
-    {% include 'query.html' %}
+	{% include 'header.html' %}
+	
+	{% include 'query_viral.html' %}
 
     {% if beacon_response %}
 
@@ -41,6 +42,10 @@
 		{% elif request.path == '/samples'%}
 			<main class="per-sample">
 				{% include 'result_persamples.html' %}
+			</main>
+		{% elif request.path == '/viral_snp'%}
+			<main class="viral_snp">
+				{% include 'viral_snp.html' %}
 			</main>
 		{% else %}
 			<main class="datasetAlleleResponses">

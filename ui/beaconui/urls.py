@@ -7,7 +7,9 @@ from .views import (BeaconQueryView,
                     BeaconAccessLevelsView,
                     BeaconFilteringTermsView,
                     TestingView,
-                    BeaconSamplesView)
+                    BeaconSamplesView,
+                    BeaconViralSNPView)
+
 from .auth import BeaconLoginView, BeaconLogoutView
 
 urlpatterns = [
@@ -27,6 +29,8 @@ urlpatterns = [
     path('privacy', TemplateView.as_view(template_name='privacy.html'), name='privacy'),
     path('logout', BeaconLogoutView.as_view(), name='logout'),
     # Testing
-    path('testing', TestingView.as_view(), name='testing')
+    path('testing', TestingView.as_view(), name='testing'),
+    # Viral endpoints
+    path('viral_snp', BeaconViralSNPView.as_view(), name='viral_snp')
 ]
 # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

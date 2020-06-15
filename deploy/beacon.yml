@@ -38,6 +38,7 @@ services:
     volumes:
       - ../src/beacon_api:/beacon/beacon_api  # we do that to be able to modify the code and update the container "live"
       - ./beacon/beacon.conf:/beacon/beacon_api/conf/config.ini
+      - ./beacon/beacon_cohorts.json:/beacon/beacon_api/conf/beacon_cohorts.json
       - ./beacon/access_levels.yml:/beacon/beacon_api/utils/access_levels.yml
     ports:
       - "5050:5050"

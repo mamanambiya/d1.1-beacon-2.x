@@ -16,6 +16,7 @@ import logging
 
 from .. import __id__, __beacon_name__, __apiVersion__, __org_id__, __org_name__, __org_description__, __org_adress__, __org_welcomeUrl__, __org_contactUrl__, __org_logoUrl__, __org_info__
 from .. import __description__, __version__, __welcomeUrl__, __alternativeUrl__, __createDateTime__, __updateDateTime__
+from .. import __cohorts_json__
 from .exceptions import BeaconBadRequest, BeaconServerError, BeaconBasicBadRequest
 
 from ..utils.models import GA4GH_ServiceInfo_v01, Beacon_v1, organization, sample_allele_request
@@ -132,6 +133,9 @@ async def info_handler(request, processed_request, pool, info_endpoint=False, se
     beacon_info.update({'datasets': beacon_dataset,
                         # If one sets up a beacon it is recommended to adjust these sample requests
                         'sampleAlleleRequests': sample_allele_request}) 
+
+    if __cohorts_json__:
+        beacon_info.update({'cohorts': __cohorts_json__})
 
     # Before returning the response we need to filter it depending on the access levels
     beacon_response = {"beacon": beacon_info}

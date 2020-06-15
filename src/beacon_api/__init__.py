@@ -39,3 +39,6 @@ __open__ = CONFIG_INFO.open
 __service_type__ = CONFIG_INFO.service_type 
 __documentationUrl__ = CONFIG_INFO.documentationUrl
 __environment__ = CONFIG_INFO.environment
+
+# cohorts
+__cohorts_json__ = CONFIG_INFO.cohorts_json

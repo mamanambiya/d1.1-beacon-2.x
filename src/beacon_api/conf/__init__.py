@@ -16,6 +16,14 @@ def parse_config_file(path):
     """Parse configuration file."""
     config = ConfigParser()
     config.read(path)
+
+    # read in cohorts JOSN file
+    cohorts_datafile = config.get('cohorts', 'datafile', fallback=None)
+    cohorts_json = None
+    if cohorts_datafile:
+        with open(cohorts_datafile, 'r') as infile:
+            cohorts_json = json.load(infile)
+
     config_vars = {
         # Beacon general info
         'id': config.get('beacon_general_info', 'id'),
@@ -47,9 +55,10 @@ def parse_config_file(path):
         'open': config.get('services', 'open'),
         'service_type': config.get('services', 'service_type'),
         'documentationUrl': config.get('services', 'documentationUrl'),
-        'environment': config.get('services', 'environment')
+        'environment': config.get('services', 'environment'),
 
-
+        # Cohorts
+        'cohorts_json': cohorts_json
     }
     return namedtuple("Config", config_vars.keys())(*config_vars.values())
 

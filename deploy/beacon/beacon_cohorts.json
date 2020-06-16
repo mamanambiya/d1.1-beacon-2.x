@@ -1,4 +1,4 @@
-{
+[{
    "cohortName":"1000 Genomes",
    "categories":[
       {
@@ -62,4 +62,4 @@
          ]
       }
    ]
-}
+}]

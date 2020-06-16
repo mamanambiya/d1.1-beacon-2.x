@@ -89,7 +89,7 @@ def Beacon_v1(host):
     return Beacon_v1
 
 def GA4GH_ServiceInfo_v01(host):
-    parse_service_type = split(__service_type__,':')
+    parse_service_type = __service_type__.split(':')
     group, artifact, version = parse_service_type[0], "", ""
     if len(parse_service_type) > 1:
         artifact = parse_service_type[1]
@@ -103,7 +103,7 @@ def GA4GH_ServiceInfo_v01(host):
             "group": group,
             "artifact": artifact,
             "version": version
-        }
+        },
         'description': __description__,
         "organization": {'name': __org_name__,
                         'url': __org_welcomeUrl__},

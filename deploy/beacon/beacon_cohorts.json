@@ -1,8 +1,65 @@
-[
-    { "name": "cohort1",
-      "size": 100
-    },
-    { "name": "cohort2",
-      "size": 200
-    }
-]
+{
+   "cohortName":"1000 Genomes",
+   "categories":[
+      {
+         "name":"basic cohort attributes",
+         "subcategories":[
+            {
+               "ontologyLabel":"Study Objective",
+               "ontologyId":"NCIT:C93415",
+               "value":"Study global human genomic variation"
+            },
+            {
+               "ontologyLabel":"Timeline",
+               "ontologyId":"NCIT:C54576",
+               "value":"2008-2012"
+            },
+            {
+               "ontologyLabel":"Study Design",
+               "ontologyId":"NCIT:C15320",
+               "value":"Genetic population study"
+                  },
+            { 
+               "ontologyLabel":"Location",
+               "ontologyId":"NCIT:C25341",
+               "value":"Global"
+            },
+            {
+               "ontologyLabel":"Inclusion Criteria",
+               "ontologyId":"NCIT:C25532",
+               "value":"age 18+"
+            },
+            {  
+               "ontologyLabel":"Sex",
+               "ontologyId":"NCIT:C28421",
+               "value":"2"
+            },
+            {  
+               "ontologyLabel":"Gender",
+               "ontologyId":"NCIT:C17357",
+               "value": "6733"
+            },
+            { 
+               "ontologyLabel":"Age range",
+               "ontologyId":"none",
+               "value":"18+"
+            }
+         ]
+      },
+      {
+         "name":"laboratory measures (Laboratory Procedure NCIT:C25294)",
+         "subcategories":[
+            {
+               "ontologyLabel":"Format",
+               "ontologyId":"NCIT:C42761",
+               "value":"VCF"
+            },
+            {
+               "ontologyLabel":"Whole Genome Sequencing",
+               "ontologyId":"NCIT:C101294",
+               "value":"yes"
+            }
+         ]
+      }
+   ]
+}

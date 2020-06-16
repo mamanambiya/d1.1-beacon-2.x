@@ -4,13 +4,13 @@ Beacon API Web Server.
 Server was designed with async/await mindset and with at aim at performance.
 """
 
-from aiohttp import web
 import os
 import sys
-import aiohttp_cors
-import logging
 import asyncio
 import json
+from aiohttp import web
+import aiohttp_cors
+import logging
 
 from .conf.config import init_db_pool
 from .conf.logging import load_logger
@@ -19,7 +19,7 @@ from .utils.validate import validate, parse_request_object, validate_services, p
 from .api.exceptions import BeaconUnauthorised, BeaconBadRequest, BeaconForbidden, BeaconServerError
 
 from .api.query import query_request_handler
-from .api.info import info_handler
+from .api.info import info_handler, cohorts_handler
 from .api.filtering_terms import filtering_terms_handler
 from .api.genomic_query import genomic_request_handler
 from .api.access_levels import access_levels_terms_handler
@@ -54,6 +54,17 @@ async def beacon_get(request):
         response = await info_handler(request, processed_request, db_pool, info_endpoint=True)
     else:
         response = await info_handler(request, processed_request, db_pool)
+    return web.json_response(response)
+
+
+@routes.get('/cohorts')
+async def cohort_get(request):
+    """
+    Use the HTTP protocol 'GET' to return a Json object of all cohort metadata if any.
+    """
+    LOG.info('GET request to the cohorts endpoint.')
+    _, processed_request = await parse_basic_request_object(request)
+    response = await cohorts_handler(request, processed_request)
     return web.json_response(response)
 
 

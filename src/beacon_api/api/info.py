@@ -146,3 +146,63 @@ async def info_handler(request, processed_request, pool, info_endpoint=False, se
     return filtered_response["beacon"]
 
     # return beacon_info
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+#                                         COHORTS HANDLER FUNCTION
+# ----------------------------------------------------------------------------------------------------------------------
+
+async def cohorts_handler(request, processed_request):
+    """
+    Construct the `Beacon` cohort information dict.
+
+    Returns the cohort response dictionary. 
+    """
+
+    ncohorts = 0
+    cohorts_as_list = []
+    if __cohorts_json__:
+        if isinstance(__cohorts_json__, list):
+            ncohorts = len(__cohorts_json__)
+            cohorts_as_list = __cohorts_json__
+        else:
+            ncohorts = 1
+            cohorts_as_list = [ __cohorts_json__ ]
+
+    response = {
+                "meta": {
+                    "beaconId": __id__,
+                    "apiVersion": "v2.0.0-draft.1",
+                    "receivedRequest": {
+                        "meta": {
+                            "requestedSchemas": {},
+                            "apiVersion": ""
+                        },
+                        "query": {}
+                    },
+                    "returnedSchemas": {
+                        "Cohort": ["beacon-cohort-v0.1"]*ncohorts
+                    }
+                }}
+
+    cohorts_response = {
+        "exists": False,
+        "info": "",
+        "resultsHandover": "",
+        "beaconHandover": ""
+    }
+
+    if ncohorts > 0:
+        cohorts_response['exists'] = True
+        cohorts_response['results'] = []
+        for cohort in cohorts_as_list:
+            cohorts_response['results'].append({
+                "defaultSchema": {
+                    "version": "beacon-cohort-v0.1",
+                    "value": cohort
+                },
+                "alternativeSchemas": []
+            })
+
+    response["response"] = cohorts_response
+    return response

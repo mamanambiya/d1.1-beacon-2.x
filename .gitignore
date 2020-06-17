@@ -115,3 +115,4 @@ venv.bak/
 
 # Tests tmp
 /tests/tmp/
+.vscode/settings.json

@@ -6,7 +6,7 @@ import ast
 
 from .. import __id__, __beacon_name__, __apiVersion__, __org_id__, __org_name__, __org_description__, __org_adress__, __org_welcomeUrl__, __org_contactUrl__, __org_logoUrl__, __org_info__
 from .. import __description__, __version__, __welcomeUrl__, __alternativeUrl__, __createDateTime__, __updateDateTime__
-from .. import __service__, __serviceUrl__, __entryPoint__, __open__, __service_type__, __documentationUrl__, __environment__
+from .. import __service__, __serviceUrl__, __entryPoint__, __open__, __service_type__, __documentationUrl__, __environment__, __type_group__, __type_artifact__, __type_version__
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -89,20 +89,13 @@ def Beacon_v1(host):
     return Beacon_v1
 
 def GA4GH_ServiceInfo_v01(host):
-    parse_service_type = __service_type__.split(':')
-    group, artifact, version = parse_service_type[0], "", ""
-    if len(parse_service_type) > 1:
-        artifact = parse_service_type[1]
-    if len(parse_service_type) > 2:
-        version = parse_service_type[2]
-
     GA4GH_ServiceInfo_v01 = {
         'id': __id__,
         'name': __beacon_name__,
         'type': {
-            "group": group,
-            "artifact": artifact,
-            "version": version
+            'group': __type_group__,
+            'artifact': __type_artifact__,
+            'version': __type_version__
         },
         'description': __description__,
         "organization": {'name': __org_name__,
